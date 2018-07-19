@@ -98,11 +98,16 @@ object Builder {
         val posts = File("src/main/resources/blog/published").listFiles().flatMap { year ->
             year.listFiles().map {
                 val header = it.readText().split("---")[1]
+                val title = header.lines().map { it.trim() }
+                        .filter { it.startsWith("title:") }
+                        .first()
+                        .split(":")[1].trim()
+
                 Post(
                         year = it.name.split('-')[0],
                         header = header,
                         content = it.readText().split("---")[2],
-                        title = "test",
+                        title = title,
                         url = "/" + blogFolder.name + "/" + it.name.split('.')[0] + ".html",
                         outputDir = it.name.split('.')[0] + ".html"
 
