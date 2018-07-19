@@ -95,17 +95,19 @@ object Builder {
         blogFolder.mkdir()
 
         // Load up data
-        val posts = File("src/main/resources/blog/published").listFiles().map {
-            val header = it.readText().split("---")[1]
-            Post(
-                    year = it.name.split('-')[0],
-                    header = header,
-                    content = it.readText().split("---")[2],
-                    title = "test",
-                    url = blogFolder.name + "/" + it.name.split('.')[0] + ".html",
-                    outputDir = it.name.split('.')[0] + ".html"
+        val posts = File("src/main/resources/blog/published").listFiles().flatMap { year ->
+            year.listFiles().map {
+                val header = it.readText().split("---")[1]
+                Post(
+                        year = it.name.split('-')[0],
+                        header = header,
+                        content = it.readText().split("---")[2],
+                        title = "test",
+                        url = blogFolder.name + "/" + it.name.split('.')[0] + ".html",
+                        outputDir = it.name.split('.')[0] + ".html"
 
-            )
+                )
+            }
         }
 
         var sidebarItems: MutableMap<String, List<Pair<String, String>>> = mutableMapOf()
@@ -123,7 +125,7 @@ object Builder {
 
         // Generate main page
         File(outDir, "index.html").writeText(
-                generatePage(generateMain, sidebarItems)
+                generatePage(generateMain(posts), sidebarItems)
         )
 
         File(outDir, "calendar.html").writeText(
@@ -220,18 +222,18 @@ object Builder {
         }.serialize(true)
     }
 
-    var generateMain: (DIV) -> Unit = {
+    var generateMain: (posts: List<Post>) -> (DIV) -> Unit = {
 
         val html = Markdown.renderer.render(
                 Markdown.parser.parse(
                         File("src/main/resources/home.md").readText()
                 )
         )
-        it.div {
-            unsafe {
-                raw(html)
-            }
-        }
+
+
+
+        val inner: (DIV) -> Unit = { it.div { unsafe { raw(html) } } }
+        inner
     }
 
 
