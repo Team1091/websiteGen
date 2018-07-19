@@ -103,7 +103,7 @@ object Builder {
                         header = header,
                         content = it.readText().split("---")[2],
                         title = "test",
-                        url = blogFolder.name + "/" + it.name.split('.')[0] + ".html",
+                        url = "/" + blogFolder.name + "/" + it.name.split('.')[0] + ".html",
                         outputDir = it.name.split('.')[0] + ".html"
 
                 )
@@ -111,10 +111,9 @@ object Builder {
         }
 
         var sidebarItems: MutableMap<String, List<Pair<String, String>>> = mutableMapOf()
-        posts.groupBy { it.year }.forEach { key: String, value ->
+        posts.sortedBy { it.year }.reversed().groupBy { it.year }.forEach { key: String, value ->
             sidebarItems[key] = value.map { Pair(it.title, it.url) }
         }
-
 
         // Generate child blog pages
         posts.forEach {
@@ -191,10 +190,10 @@ object Builder {
                     div("row") {
                         aside("col-sm-3") {
                             h2 { +"Blog Posts" }
-                            sidebarItems.forEach { title, links ->
-                                h3 { +title }
+                            sidebarItems.forEach { year, links ->
+                                h3 { +year }
                                 ul {
-                                    links.forEach {
+                                    links.sortedBy { it.first }.forEach {
                                         li {
                                             a(it.second) {
                                                 +it.first
@@ -229,7 +228,6 @@ object Builder {
                         File("src/main/resources/home.md").readText()
                 )
         )
-
 
 
         val inner: (DIV) -> Unit = { it.div { unsafe { raw(html) } } }

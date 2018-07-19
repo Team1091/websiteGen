@@ -1,10 +1,10 @@
 ---
 layout: post
-title: Blogging Like a Hacker
+title: Testing a Screenshot
 ---
 
 # Test Article
 
 Some test text.  This is *Sparta*
 
-![Test Screenshot](/images/header-machine-shop.jpg)
+![Test Screenshot](https://baconmockup.com/300/200)
