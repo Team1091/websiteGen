@@ -24,6 +24,14 @@ body {
 -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
 
+header {
+  color: white;
+}
+
+aside{
+  background: whitesmoke;
+}
+
 body > .container {
   padding: 60px 15px 0;
 }
@@ -38,6 +46,6 @@ code {
 }
 
 .jumbotron {
-  background-image: url("https://baconmockup.com/600/200");
+  background-image: url("/images/header-machine-shop.jpg");
   background-size: cover;
 }

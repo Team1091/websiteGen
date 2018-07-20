@@ -54,6 +54,7 @@ fun main(args: Array<String>) {
     http.port(port)
     //http.staticFiles.location("/images")
     http.staticFiles.externalLocation("www")
+
     http.get("/rebuild") {
         Builder.build()
         "OK"
@@ -93,6 +94,9 @@ object Builder {
 
         val blogFolder = File(outDir, "blog")
         blogFolder.mkdir()
+
+        val imgFolder = File(outDir, "images")
+        imgFolder.mkdir()
 
         // Load up data
         val posts = File("src/main/resources/blog/published").listFiles().flatMap { year ->
@@ -144,9 +148,12 @@ object Builder {
                 File("src/main/resources/style/style.scss").readText()
         )
 
-        Files.copy(
-                File("src/main/resources/images").toPath(),
-                File(outDir, "images").toPath(), StandardCopyOption.REPLACE_EXISTING)
+        File("src/main/resources/images").listFiles().forEach {
+            Files.copy(
+                    it.toPath(),
+                    File(imgFolder, it.name).toPath(), StandardCopyOption.REPLACE_EXISTING)
+        }
+
     }
 
 
