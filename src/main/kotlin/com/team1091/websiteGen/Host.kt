@@ -191,7 +191,7 @@ object Builder {
                 }
 
                 div("container") {
-                    div("jumbotron") {
+                    div("row jumbotron") {
                         header {
                             h1 { +"Team 1091" }
                             p { +"Hartford Union Highschool First Robotics Team" }
