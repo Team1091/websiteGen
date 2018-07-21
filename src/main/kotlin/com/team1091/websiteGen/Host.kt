@@ -68,8 +68,17 @@ data class Post(
 object Builder {
 
     var sponsors = listOf(
-            "Lions Club",
-            "Ace"
+            "Rockwell Foundation",
+            "Lutz Family Foundation",
+            "GE Healthcare",
+            "Kettle Moraine Lions Club",
+            "Hartford Area Foundation, Inc.",
+            "Electro-Pro, Inc.",
+            "HED, Inc.",
+            "Hedge Plus",
+            "Mantz Automation",
+            "Quad Graphics",
+            "Midwest Food and Tobacco"
     )
 
     fun build() {
@@ -126,7 +135,10 @@ object Builder {
 
         // Generate main page
         File(outDir, "index.html").writeText(
-                generatePage(generateMain(posts), sidebarItems)
+                generatePage(generateMain(posts), sidebarItems).replace( // This is to insert the calendar, for some reason the XML parser did not like the URL
+                        "{{calendar}}",
+                        "<iframe class=\"calendar\" width=\"800px\" height=\"600px\" src=\"https://calendar.google.com/calendar/embed?src=frcteam1091%40gmail.com&ctz=America%2FChicago\"/>"
+                )
         )
 
         File(outDir, "calendar.html").writeText(
@@ -229,34 +241,23 @@ object Builder {
     }
 
     var generateMain: (posts: List<Post>) -> (DIV) -> Unit = {
-
-        val html = Markdown.renderer.render(
-                Markdown.parser.parse(
-                        File("src/main/resources/home.md").readText()
-                )
-        )
-
-
-        val inner: (DIV) -> Unit = { it.div { unsafe { raw(html) } } }
-        inner
+        markdownToHtml(File("src/main/resources/home.md").readText())
     }
 
 
+    // Convert a markdown file into html
     val markdownToHtml: (String) -> (DIV) -> Unit = {
-
-        val document = Markdown.parser.parse(it)
-        val html = Markdown.renderer.render(document)
+        val html = Markdown.renderer.render(Markdown.parser.parse(it))
 
         val inner: (DIV) -> Unit = { it.div { unsafe { raw(html) } } }
         inner
-
     }
 
 
     val generateCalendarPageContent: (DIV) -> Unit = {
         // TODO: https://support.google.com/calendar/answer/41207?hl=en
         it.div {
-            it.iframe() {
+            it.iframe {
                 classes = setOf("calendar")
                 src = "https://calendar.google.com/calendar/embed?src=frcteam1091%40gmail.com&ctz=America%2FChicago"
                 width = "800px"
@@ -268,6 +269,12 @@ object Builder {
 
     // Load sponsors
     val generateSponsorPage: (DIV) -> Unit = {
+        it.h2 {
+            +"2018 Sponsors"
+        }
+        it.p {
+            +"Thank you to our sponsors for their generous contributions."
+        }
         it.ul("sponsors") {
             sponsors.forEach { li { +it } }
         }
