@@ -1,14 +1,5 @@
 package com.team1091.websiteGen
 
-import azadev.kotlin.css.Stylesheet
-import azadev.kotlin.css.backgroundColor
-import azadev.kotlin.css.bottom
-import azadev.kotlin.css.dimens.percent
-import azadev.kotlin.css.dimens.px
-import azadev.kotlin.css.height
-import azadev.kotlin.css.lineHeight
-import azadev.kotlin.css.position
-import azadev.kotlin.css.width
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension
 import com.vladsch.flexmark.ext.tables.TablesExtension
 import com.vladsch.flexmark.html.HtmlRenderer
@@ -18,6 +9,7 @@ import kotlinx.html.DIV
 import kotlinx.html.a
 import kotlinx.html.aside
 import kotlinx.html.body
+import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.dom.createHTMLDocument
 import kotlinx.html.dom.serialize
@@ -28,6 +20,7 @@ import kotlinx.html.h3
 import kotlinx.html.head
 import kotlinx.html.header
 import kotlinx.html.html
+import kotlinx.html.iframe
 import kotlinx.html.li
 import kotlinx.html.link
 import kotlinx.html.meta
@@ -47,7 +40,7 @@ import java.util.*
 
 fun main(args: Array<String>) {
 
-    val port = 8080
+    val port = 9000
     Builder.build()
 
     val http: Http = ignite()
@@ -144,6 +137,8 @@ object Builder {
                 generatePage(generateSponsorPage, sidebarItems)
         )
 
+
+        // look into https://github.com/scireum/server-sass
         File(cssFolder, "main.css").writeText(
                 File("src/main/resources/style/style.scss").readText()
         )
@@ -260,7 +255,14 @@ object Builder {
 
     val generateCalendarPageContent: (DIV) -> Unit = {
         // TODO: https://support.google.com/calendar/answer/41207?hl=en
-        it.div { +"Calendar Goes here" }
+        it.div {
+            it.iframe() {
+                classes = setOf("calendar")
+                src = "https://calendar.google.com/calendar/embed?src=frcteam1091%40gmail.com&ctz=America%2FChicago"
+                width = "800px"
+                height = "600px"
+            }
+        }
     }
 
 
@@ -272,26 +274,26 @@ object Builder {
     }
 
 
-    fun generateCss(): String {
-
-
-        val orange = 0xdd8500
-        val white = 0xffffff
-        val black = 0x0
-
-        // https://github.com/olegcherr/Aza-Kotlin-CSS
-        return Stylesheet {
-
-            footer {
-                position = "absolute";
-                bottom = 0;
-                width = 100.percent;
-                height = 60.px;
-                lineHeight = 60.px;
-                backgroundColor = "#f5f5f5";
-            }
-        }.render()
-    }
+//    fun generateCss(): String {
+//
+//
+//        val orange = 0xdd8500
+//        val white = 0xffffff
+//        val black = 0x0
+//
+//        // https://github.com/olegcherr/Aza-Kotlin-CSS
+//        return Stylesheet {
+//
+//            footer {
+//                position = "absolute";
+//                bottom = 0;
+//                width = 100.percent;
+//                height = 60.px;
+//                lineHeight = 60.px;
+//                backgroundColor = "#f5f5f5";
+//            }
+//        }.render()
+//    }
 
 }
 

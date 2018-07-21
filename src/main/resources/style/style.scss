@@ -29,7 +29,7 @@ header {
   text-shadow: 1px 1px black;
 }
 
-aside{
+aside {
   background: whitesmoke;
 }
 
@@ -49,4 +49,8 @@ code {
 .jumbotron {
   background-image: url("/images/header-machine-shop.jpg");
   background-size: cover;
+}
+
+.calendar {
+  border: none;
 }
