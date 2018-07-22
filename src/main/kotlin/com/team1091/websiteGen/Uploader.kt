@@ -16,6 +16,8 @@ object Uploader {
     @JvmStatic
     fun main(args: Array<String>) {
 
+        Builder.build()
+
         val ftp = FTPClient()
 
         println("Connecting")
