@@ -163,8 +163,16 @@ object Builder {
         File("src/main/resources/images").listFiles().forEach {
             Files.copy(
                     it.toPath(),
-                    File(imgFolder, it.name).toPath(), StandardCopyOption.REPLACE_EXISTING)
+                    File(imgFolder, it.name).toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+            )
         }
+
+        Files.copy(
+                File("src/main/resources/favicon.ico").toPath(),
+                File(outDir, "favicon.ico").toPath(),
+                StandardCopyOption.REPLACE_EXISTING
+        )
 
     }
 
