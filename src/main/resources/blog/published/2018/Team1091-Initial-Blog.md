@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2018-07-20
 title: Testing an Image
 ---
 

@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2017-01-01
 title: Testing Last Year Post
 ---
 # Test Post

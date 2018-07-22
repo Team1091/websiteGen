@@ -34,6 +34,7 @@ import spark.kotlin.ignite
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.time.LocalDate
 import java.util.*
 
 fun main(args: Array<String>) {
@@ -56,8 +57,7 @@ fun main(args: Array<String>) {
 }
 
 data class Post(
-        val year: String,
-        val header: String,
+        val date: LocalDate,
         val title: String,
         val url: String,
         val content: String,
@@ -65,7 +65,6 @@ data class Post(
 )
 
 data class Page(
-        val header: String,
         val title: String,
         val url: String,
         val content: String,
@@ -97,15 +96,19 @@ object Builder {
         // Load up data
         val posts = File("src/main/resources/blog/published").listFiles().flatMap { year ->
             year.listFiles().map {
-                val header = it.readText().split("---")[1]
-                val title = header.lines().map { it.trim() }
+                val header = it.readText().split("---")[1].lines().map { it.trim() }
+                val title = header
                         .filter { it.startsWith("title:") }
                         .first()
                         .split(":")[1].trim()
 
+                val date = header
+                        .filter { it.startsWith("date:") }
+                        .first()
+                        .split(":")[1].trim()
+
                 Post(
-                        year = it.name.split('-')[0],
-                        header = header,
+                        date = LocalDate.parse(date),
                         content = it.readText().split("---")[2],
                         title = title,
                         url = "/" + blogFolder.name + "/" + it.name.split('.')[0] + ".html",
@@ -123,7 +126,6 @@ object Builder {
                     .split(":")[1].trim()
 
             Page(
-                    header = header,
                     content = it.readText().split("---")[2],
                     title = title,
                     url = "/" + it.name.split('.')[0] + ".html",
@@ -132,9 +134,11 @@ object Builder {
         }
 
         var sidebarItems: MutableMap<String, List<Pair<String, String>>> = mutableMapOf()
-        posts.sortedBy { it.year }.reversed().groupBy { it.year }.forEach { key: String, value ->
-            sidebarItems[key] = value.map { Pair(it.title, it.url) }
-        }
+        posts.sortedByDescending { it.date.year }
+                .groupBy { it.date.year }
+                .forEach { key: Int, value: List<Post> ->
+                    sidebarItems[key.toString()] = value.map { Pair(it.title, it.url) }
+                }
 
         var topMenuItems: List<Pair<String, String>> = pages
                 .sortedBy { it.title }

@@ -1,6 +1,4 @@
 # Website Generator
-Website Generator
-
 
 This is a script that will generate the html for our website, and upload it to our hosting account.  
 
@@ -11,11 +9,12 @@ a minimal attack surface.
 
 ## How to post blog entries
 
-Create a new markdown file under src/main/resources/blog/published/YYYY/YYYY-MM-DD-Article-Title.md
+Create a new markdown file under src/main/resources/blog/published/YYYY/Article-Title.md
 
 ```
 ---
 title: Your Easily Readable Title
+date: YYYY-MM-DD
 ---
 # Article Title
 Write your content in markdown here.
