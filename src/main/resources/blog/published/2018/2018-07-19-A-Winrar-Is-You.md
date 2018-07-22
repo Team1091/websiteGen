@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Bacon Test
+title: Recent Post
 ---
 # Test Post
 

@@ -19,5 +19,3 @@ FRC Team 1091 Oriole Assault is composed of high school students with a goal of 
 ## Calendar
 
 {{calendar}}
-
-

@@ -67,19 +67,6 @@ data class Post(
 
 object Builder {
 
-    var sponsors = listOf(
-            "Rockwell Foundation",
-            "Lutz Family Foundation",
-            "GE Healthcare",
-            "Kettle Moraine Lions Club",
-            "Hartford Area Foundation, Inc.",
-            "Electro-Pro, Inc.",
-            "HED, Inc.",
-            "Hedge Plus",
-            "Mantz Automation",
-            "Quad Graphics",
-            "Midwest Food and Tobacco"
-    )
 
     fun build() {
         // Old layout for reference: https://web.archive.org/web/20180125183833/http://www.team1091.com/
@@ -255,7 +242,6 @@ object Builder {
 
 
     val generateCalendarPageContent: (DIV) -> Unit = {
-        // TODO: https://support.google.com/calendar/answer/41207?hl=en
         it.div {
             it.iframe {
                 classes = setOf("calendar")
@@ -266,8 +252,20 @@ object Builder {
         }
     }
 
+    var sponsors = listOf(
+            "Rockwell Foundation",
+            "Lutz Family Foundation",
+            "GE Healthcare",
+            "Kettle Moraine Lions Club",
+            "Hartford Area Foundation, Inc.",
+            "Electro-Pro, Inc.",
+            "HED, Inc.",
+            "Hedge Plus",
+            "Mantz Automation",
+            "Quad Graphics",
+            "Midwest Food and Tobacco"
+    )
 
-    // Load sponsors
     val generateSponsorPage: (DIV) -> Unit = {
         it.h2 {
             +"2018 Sponsors"

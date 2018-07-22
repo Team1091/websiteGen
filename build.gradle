@@ -27,6 +27,7 @@ dependencies {
     compile 'commons-io:commons-io:2.6'
     compile 'com.sparkjava:spark-kotlin:1.0.0-alpha'
     compile 'com.scireum:server-sass:4.1.2'
+    compile 'commons-net:commons-net:3.6'
 }
 
 compileKotlin {

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Testing a Screenshot
+title: Testing an Image
 ---
 
 # Test Article
