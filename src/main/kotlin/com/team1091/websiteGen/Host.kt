@@ -9,7 +9,6 @@ import kotlinx.html.DIV
 import kotlinx.html.a
 import kotlinx.html.aside
 import kotlinx.html.body
-import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.dom.createHTMLDocument
 import kotlinx.html.dom.serialize
@@ -20,7 +19,6 @@ import kotlinx.html.h3
 import kotlinx.html.head
 import kotlinx.html.header
 import kotlinx.html.html
-import kotlinx.html.iframe
 import kotlinx.html.li
 import kotlinx.html.link
 import kotlinx.html.meta
@@ -60,10 +58,19 @@ fun main(args: Array<String>) {
 data class Post(
         val year: String,
         val header: String,
-        val content: String,
         val title: String,
         val url: String,
-        val outputDir: String)
+        val content: String,
+        val outputDir: String
+)
+
+data class Page(
+        val header: String,
+        val title: String,
+        val url: String,
+        val content: String,
+        val outputDir: String
+)
 
 object Builder {
 
@@ -108,33 +115,44 @@ object Builder {
             }
         }
 
+        val pages = File("src/main/resources/pages").listFiles().map {
+            val header = it.readText().split("---")[1]
+            val title = header.lines().map { it.trim() }
+                    .filter { it.startsWith("title:") }
+                    .first()
+                    .split(":")[1].trim()
+
+            Page(
+                    header = header,
+                    content = it.readText().split("---")[2],
+                    title = title,
+                    url = "/" + it.name.split('.')[0] + ".html",
+                    outputDir = it.name.split('.')[0] + ".html"
+            )
+        }
+
         var sidebarItems: MutableMap<String, List<Pair<String, String>>> = mutableMapOf()
         posts.sortedBy { it.year }.reversed().groupBy { it.year }.forEach { key: String, value ->
             sidebarItems[key] = value.map { Pair(it.title, it.url) }
         }
 
-        // Generate child blog pages
+        var topMenuItems: List<Pair<String, String>> = pages
+                .sortedBy { it.title }
+                .map { Pair(it.title, it.url) }
+
+        // Generate Blog pages
         posts.forEach {
             File(blogFolder, it.outputDir).writeText(
-                    generatePage(markdownToHtml(it.content), sidebarItems)
+                    generatePage(markdownToHtml(it.content), topMenuItems, sidebarItems)
             )
         }
 
-        // Generate main page
-        File(outDir, "index.html").writeText(
-                generatePage(generateMain(posts), sidebarItems).replace( // This is to insert the calendar, for some reason the XML parser did not like the URL
-                        "{{calendar}}",
-                        "<iframe class=\"calendar\" width=\"800px\" height=\"600px\" src=\"https://calendar.google.com/calendar/embed?src=frcteam1091%40gmail.com&ctz=America%2FChicago\"/>"
-                )
-        )
-
-        File(outDir, "calendar.html").writeText(
-                generatePage(generateCalendarPageContent, sidebarItems)
-        )
-
-        File(outDir, "sponsor.html").writeText(
-                generatePage(generateSponsorPage, sidebarItems)
-        )
+        // Generate Main Pages
+        pages.forEach {
+            File(outDir, it.outputDir).writeText(
+                    generatePage(markdownToHtml(it.content), topMenuItems, sidebarItems)
+            )
+        }
 
 
         // look into https://github.com/scireum/server-sass
@@ -151,7 +169,9 @@ object Builder {
     }
 
 
-    fun generatePage(content: (DIV) -> Unit, sidebarItems: Map<String, List<Pair<String, String>>>): String {
+    fun generatePage(content: (DIV) -> Unit,
+                     topMenuItems: List<Pair<String, String>>,
+                     sidebarItems: Map<String, List<Pair<String, String>>>): String {
         // https://web.archive.org/web/20180125183833/http://www.team1091.com/
         // https://github.com/Kotlin/kotlinx.html
         return createHTMLDocument().html {
@@ -170,14 +190,11 @@ object Builder {
                         a(href = "/", classes = "navbar-brand") { +"Home" }
                         div("collapse navbar-collapse") {
                             ul("navbar-nav mr-auto") {
-                                li(classes = "nav-item") {
-                                    a(classes = "nav-link", href = "/calendar.html") { +"Calendar" }
-                                }
-                                li(classes = "nav-item") {
-                                    a(classes = "nav-link", href = "/sponsor.html") { +"Sponsors" }
-                                }
-                                li(classes = "nav-item") {
-                                    a(classes = "nav-link", href = "#") {}
+
+                                topMenuItems.filter { it.first != "Home" }.forEach {
+                                    li(classes = "nav-item") {
+                                        a(classes = "nav-link", href = it.second) { +it.first }
+                                    }
                                 }
                             }
                         }
@@ -224,11 +241,11 @@ object Builder {
                     }
                 }
             }
-        }.serialize(true)
-    }
-
-    var generateMain: (posts: List<Post>) -> (DIV) -> Unit = {
-        markdownToHtml(File("src/main/resources/home.md").readText())
+        }
+                .serialize(true)
+                .replace( // This is to insert the calendar, for some reason the XML parser did not like the URL
+                        "{{calendar}}",
+                        "<iframe class=\"calendar\" width=\"800px\" height=\"600px\" src=\"https://calendar.google.com/calendar/embed?src=frcteam1091%40gmail.com&ctz=America%2FChicago\"/>")
     }
 
 
@@ -238,44 +255,6 @@ object Builder {
 
         val inner: (DIV) -> Unit = { it.div { unsafe { raw(html) } } }
         inner
-    }
-
-
-    val generateCalendarPageContent: (DIV) -> Unit = {
-        it.div {
-            it.iframe {
-                classes = setOf("calendar")
-                src = "https://calendar.google.com/calendar/embed?src=frcteam1091%40gmail.com&ctz=America%2FChicago"
-                width = "800px"
-                height = "600px"
-            }
-        }
-    }
-
-    var sponsors = listOf(
-            "Rockwell Foundation",
-            "Lutz Family Foundation",
-            "GE Healthcare",
-            "Kettle Moraine Lions Club",
-            "Hartford Area Foundation, Inc.",
-            "Electro-Pro, Inc.",
-            "HED, Inc.",
-            "Hedge Plus",
-            "Mantz Automation",
-            "Quad Graphics",
-            "Midwest Food and Tobacco"
-    )
-
-    val generateSponsorPage: (DIV) -> Unit = {
-        it.h2 {
-            +"2018 Sponsors"
-        }
-        it.p {
-            +"Thank you to our sponsors for their generous contributions."
-        }
-        it.ul("sponsors") {
-            sponsors.forEach { li { +it } }
-        }
     }
 
 

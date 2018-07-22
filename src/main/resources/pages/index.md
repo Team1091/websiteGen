@@ -1,3 +1,7 @@
+---
+title: Home
+---
+
 # Oriole Assault
 ## First Robotics Team 1091 
 
