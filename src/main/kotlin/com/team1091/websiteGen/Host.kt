@@ -147,14 +147,14 @@ object Builder {
         // Generate Blog pages
         posts.forEach {
             File(blogFolder, it.outputDir).writeText(
-                    generatePage(markdownToHtml(it.content), topMenuItems, sidebarItems)
+                    generatePage(markdownToHtml(it.content), it.title, topMenuItems, sidebarItems)
             )
         }
 
         // Generate Main Pages
         pages.forEach {
             File(outDir, it.outputDir).writeText(
-                    generatePage(markdownToHtml(it.content), topMenuItems, sidebarItems)
+                    generatePage(markdownToHtml(it.content), it.title, topMenuItems, sidebarItems)
             )
         }
 
@@ -182,13 +182,14 @@ object Builder {
 
 
     fun generatePage(content: (DIV) -> Unit,
+                     title: String,
                      topMenuItems: List<Pair<String, String>>,
                      sidebarItems: Map<String, List<Pair<String, String>>>): String {
         // https://web.archive.org/web/20180125183833/http://www.team1091.com/
         // https://github.com/Kotlin/kotlinx.html
         return createHTMLDocument().html {
             head {
-                title("Team 1091 | Oriole Assault")
+                title("${title} | Team 1091 | Oriole Assault")
                 meta(content = "text/html", charset = "urt-8")
                 meta(name = "viewport", content = "width=device-width, initial-scale=1")
                 link(rel = "stylesheet", href = "http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css")
