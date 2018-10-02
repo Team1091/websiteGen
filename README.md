@@ -22,7 +22,7 @@ Write your content in markdown here.
 ```
 
 ## How to upload top level pages
-If you want a top level page, you can put a markdown file under src/main/resources/url.md
+If you want a top level page, you can put a markdown file under src/main/resources/{url}.md
 
 
 

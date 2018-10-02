@@ -9,9 +9,9 @@ import java.io.IOException
 // Uploads to the website
 object Uploader {
 
-    val host = System.getenv("HOST")
-    val user = System.getenv("USER")
-    val pwd = System.getenv("PASS")
+    private val host: String = System.getenv("HOST")
+    private val user: String = System.getenv("USER")
+    private val pwd: String = System.getenv("PASS")
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -71,7 +71,7 @@ object FTPUtil {
 
         val subFiles = ftpClient.listFiles(dirToList)
 
-        if (subFiles != null && subFiles.size > 0) {
+        if (subFiles != null && subFiles.isNotEmpty()) {
             for (aFile in subFiles) {
                 val currentFileName = aFile.name
                 if (currentFileName == "." || currentFileName == "..") {

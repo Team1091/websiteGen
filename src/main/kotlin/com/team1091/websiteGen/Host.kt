@@ -37,16 +37,21 @@ import java.nio.file.StandardCopyOption
 import java.time.LocalDate
 import java.util.*
 
+// This is the main function, its the starting point to the whole application
 fun main(args: Array<String>) {
 
     val port = 9000
+
+    // This converts our markdown into webpages
     Builder.build()
 
+    // This creates a small webserver using http://sparkjava.com/
     val http: Http = ignite()
     http.port(port)
     //http.staticFiles.location("/images")
     http.staticFiles.externalLocation("www")
 
+    // we can hit a endpoint called rebuild to remake the site
     http.get("/rebuild") {
         Builder.build()
         "OK"
@@ -56,6 +61,7 @@ fun main(args: Array<String>) {
 
 }
 
+// Blog posts
 data class Post(
         val date: LocalDate,
         val title: String,
@@ -64,6 +70,7 @@ data class Post(
         val outputDir: String
 )
 
+// General Pages
 data class Page(
         val title: String,
         val url: String,
@@ -71,16 +78,21 @@ data class Page(
         val outputDir: String
 )
 
+/**
+ * This takes in some markdown and generates a website from it
+ */
 object Builder {
 
 
     fun build() {
         // Old layout for reference: https://web.archive.org/web/20180125183833/http://www.team1091.com/
 
+        // This deletes and recreates the web folder
         val outDir = File("www")
         FileUtils.deleteDirectory(outDir)
         outDir.mkdir()
 
+        // Make some dirs for assets
         val cssFolder = File(outDir, "css")
         cssFolder.mkdir()
 
@@ -95,54 +107,53 @@ object Builder {
 
         // Load up data
         val posts = File("src/main/resources/blog/published").listFiles().flatMap { year ->
-            year.listFiles().map {
-                val header = it.readText().split("---")[1].lines().map { it.trim() }
-                val title = header
-                        .filter { it.startsWith("title:") }
-                        .first()
+            year.listFiles().map { post ->
+                val header = post.readText().split("---")[1].lines().map { it.trim() }
+                val title = header.asSequence()
+                        .first { it.startsWith("title:") }
                         .split(":")[1].trim()
 
-                val date = header
-                        .filter { it.startsWith("date:") }
-                        .first()
+                val date = header.asSequence()
+                        .first { it.startsWith("date:") }
                         .split(":")[1].trim()
 
                 Post(
                         date = LocalDate.parse(date),
-                        content = it.readText().split("---")[2],
+                        content = post.readText().split("---")[2],
                         title = title,
-                        url = "/" + blogFolder.name + "/" + it.name.split('.')[0] + ".html",
-                        outputDir = it.name.split('.')[0] + ".html"
-
+                        url = "/" + blogFolder.name + "/" + post.name.split('.')[0] + ".html",
+                        outputDir = post.name.split('.')[0] + ".html"
                 )
             }
         }
 
-        val pages = File("src/main/resources/pages").listFiles().map {
-            val header = it.readText().split("---")[1]
-            val title = header.lines().map { it.trim() }
-                    .filter { it.startsWith("title:") }
-                    .first()
+        val pages = File("src/main/resources/pages").listFiles().map { file ->
+            val header = file.readText().split("---")[1]
+            val title = header.lines().asSequence()
+                    .map { it.trim() }
+                    .first { it.startsWith("title:") }
                     .split(":")[1].trim()
 
             Page(
-                    content = it.readText().split("---")[2],
+                    content = file.readText().split("---")[2],
                     title = title,
-                    url = "/" + it.name.split('.')[0] + ".html",
-                    outputDir = it.name.split('.')[0] + ".html"
+                    url = "/" + file.name.split('.')[0] + ".html",
+                    outputDir = file.name.split('.')[0] + ".html"
             )
         }
 
-        var sidebarItems: MutableMap<String, List<Pair<String, String>>> = mutableMapOf()
-        posts.sortedByDescending { it.date.year }
+        val sidebarItems: MutableMap<String, List<Pair<String, String>>> = mutableMapOf()
+        posts.asSequence()
+                .sortedByDescending { it.date.year }
                 .groupBy { it.date.year }
                 .forEach { key: Int, value: List<Post> ->
                     sidebarItems[key.toString()] = value.map { Pair(it.title, it.url) }
                 }
 
-        var topMenuItems: List<Pair<String, String>> = pages
+        val topMenuItems: List<Pair<String, String>> = pages.asSequence()
                 .sortedBy { it.title }
                 .map { Pair(it.title, it.url) }
+                .toList()
 
         // Generate Blog pages
         posts.forEach {
@@ -189,7 +200,7 @@ object Builder {
         // https://github.com/Kotlin/kotlinx.html
         return createHTMLDocument().html {
             head {
-                title("${title} | Team 1091 | Oriole Assault")
+                title("$title | Team 1091 | Oriole Assault")
                 meta(content = "text/html", charset = "urt-8")
                 meta(name = "viewport", content = "width=device-width, initial-scale=1")
                 link(rel = "stylesheet", href = "http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css")
@@ -295,16 +306,13 @@ object Builder {
 }
 
 object Markdown {
-
-    val options: MutableDataSet
     val parser: Parser
     val renderer: HtmlRenderer
 
     init {
-        options = MutableDataSet()
-
+        val options = MutableDataSet()
         // uncomment to set optional extensions
-        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
+        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()))
 
         // uncomment to convert soft-breaks to hard breaks
         //options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");

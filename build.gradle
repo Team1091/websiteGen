@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.51'
+    ext.kotlin_version = '1.2.71'
 
     repositories {
         mavenCentral()
@@ -40,7 +40,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-task upload(type:JavaExec){
+task upload(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "com.team1091.websiteGen.Uploader"
 }
