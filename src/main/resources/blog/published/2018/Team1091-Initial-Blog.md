@@ -8,4 +8,4 @@ title: Testing an Image
 
 Some test text.  This is *Sparta*
 
-![Test Screenshot](https://baconmockup.com/300/200)
+![Test Screenshot](https://github.com/Team1091/websiteGen/blob/master/src/main/resources/images/team_photo2018season.JPG?raw=true)
