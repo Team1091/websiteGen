@@ -13,10 +13,11 @@ Meeting for 10/10/2018
 -Parent meeting on the 17th of October (Students start meeting at normal time)
 -After parent meeting we will be meeting on Thursdays
 -Madison STEM awareness this Friday ← Not doing this year, parade got in way
->Keep in mind for next year
+-Keep in mind for next year
 -TURN IN ORANGE CARDS
 -Worked on sponsor packet 
-#**What we need to get done**
+
+#What we need to get done
 2 member team
 Getting a list of local business
 Physically go to the places
