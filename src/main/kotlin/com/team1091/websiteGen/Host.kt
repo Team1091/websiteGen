@@ -147,7 +147,7 @@ object Builder {
                 .sortedByDescending { it.date.year }
                 .groupBy { it.date.year }
                 .forEach { key: Int, value: List<Post> ->
-                    sidebarItems[key.toString()] = value.map { Pair(it.title, it.url) }
+                    sidebarItems[key.toString()] = value.sortedByDescending { it.date }.map { Pair(it.title, it.url) }
                 }
 
         val topMenuItems: List<Pair<String, String>> = pages.asSequence()
@@ -240,7 +240,7 @@ object Builder {
                             sidebarItems.forEach { year, links ->
                                 h3 { +year }
                                 ul {
-                                    links.sortedBy { it.first }.forEach {
+                                    links.forEach {
                                         li {
                                             a(it.second) {
                                                 +it.first
