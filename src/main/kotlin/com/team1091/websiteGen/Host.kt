@@ -1,10 +1,5 @@
 package com.team1091.websiteGen
 
-import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension
-import com.vladsch.flexmark.ext.tables.TablesExtension
-import com.vladsch.flexmark.html.HtmlRenderer
-import com.vladsch.flexmark.parser.Parser
-import com.vladsch.flexmark.util.options.MutableDataSet
 import kotlinx.html.DIV
 import kotlinx.html.a
 import kotlinx.html.aside
@@ -35,7 +30,6 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.time.LocalDate
-import java.util.*
 
 // This is the main function, its the starting point to the whole application
 fun main(args: Array<String>) {
@@ -60,23 +54,6 @@ fun main(args: Array<String>) {
     println("Go to http://localhost:$port/ in your browser")
 
 }
-
-// Blog posts
-data class Post(
-        val date: LocalDate,
-        val title: String,
-        val url: String,
-        val content: String,
-        val outputDir: String
-)
-
-// General Pages
-data class Page(
-        val title: String,
-        val url: String,
-        val content: String,
-        val outputDir: String
-)
 
 /**
  * This takes in some markdown and generates a website from it
@@ -305,21 +282,3 @@ object Builder {
 
 }
 
-object Markdown {
-    val parser: Parser
-    val renderer: HtmlRenderer
-
-    init {
-        val options = MutableDataSet()
-        // uncomment to set optional extensions
-        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()))
-
-        // uncomment to convert soft-breaks to hard breaks
-        //options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
-
-        parser = Parser.builder(options).build()
-        renderer = HtmlRenderer.builder(options).build()
-
-    }
-
-}
