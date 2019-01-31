@@ -42,7 +42,6 @@ fun main(args: Array<String>) {
     // This creates a small webserver using http://sparkjava.com/
     val http: Http = ignite()
     http.port(port)
-    //http.staticFiles.location("/images")
     http.staticFiles.externalLocation("www")
 
     // we can hit a endpoint called rebuild to remake the site

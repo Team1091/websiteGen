@@ -4,4 +4,4 @@ jdk:
   - openjdk10
 
 script:
-  - gradle upload
+  - ./gradlew upload --scan -s

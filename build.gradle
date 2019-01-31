@@ -28,9 +28,12 @@ dependencies {
     compile 'azadev.kotlin:aza-kotlin-css:1.0'
     compile "org.jetbrains.kotlinx:kotlinx-html-jvm:0.6.11"
     compile 'commons-io:commons-io:2.6'
+//    compile "com.sparkjava:spark-core:2.7.1"
     compile 'com.sparkjava:spark-kotlin:1.0.0-alpha'
 //    compile 'com.scireum:server-sass:4.1.2'
     compile 'commons-net:commons-net:3.6'
+
+    testCompile 'org.slf4j:slf4j-simple:1.7.25'
 }
 
 compileKotlin {
