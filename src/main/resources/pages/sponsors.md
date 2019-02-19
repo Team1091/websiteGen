@@ -2,18 +2,22 @@
 title: Sponsors
 ---
 
-# 2018 Sponsors
+# 2019 Sponsors
 
 Thank you to our sponsors for their generous contributions.
 
-* Rockwell Foundation
-* Lutz Family Foundation
+## Platinum Tier
 * GE Healthcare
-* Kettle Moraine Lions Club
-* Hartford Area Foundation, Inc.
-* Electro-Pro, Inc.
-* HED, Inc.
-* Hedge Plus
-* Mantz Automation
-* Quad Graphics
-* Midwest Food and Tobacco
+* Rockwell Automation
+* Broan
+* Helgesen Industries
+* Lutz Family Foundation
+
+## Gold Tier
+* Hartford Area Foundation
+* Kettle Moraine Lions
+
+## Silver Tier
+* Triton Trailers
+* Midwest Products
+
