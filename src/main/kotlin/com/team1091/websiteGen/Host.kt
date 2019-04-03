@@ -81,6 +81,9 @@ object Builder {
         val imgFolder = File(outDir, "images")
         imgFolder.mkdir()
 
+        val fileFolder = File(outDir, "files")
+        fileFolder.mkdir()
+
         // Load up data
         val posts = File("src/main/resources/blog/published").listFiles().flatMap { year ->
             year.listFiles().map { post ->
@@ -155,6 +158,14 @@ object Builder {
             Files.copy(
                     it.toPath(),
                     File(imgFolder, it.name).toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+            )
+        }
+
+        File("src/main/resources/files/").listFiles().forEach {
+            Files.copy(
+                    it.toPath(),
+                    File(fileFolder, it.name).toPath(),
                     StandardCopyOption.REPLACE_EXISTING
             )
         }
