@@ -5,10 +5,9 @@ title: Seven Rivers Regional
 ---
 
 # Seven Rivers Regional
-
-On Starting on the 4th, our team started our second regional of the year.
-By winning the Wisconsin Regional in Milwaukee we were able to focus in our the set skills we 
-need to prep from the World's Championship Competition. The team started strong by winning all of 
+Starting on the 4th, our team competed at our second regional of the year.
+By winning the Wisconsin Regional in Milwaukee we were able to focus in our skillset we 
+need to prep for the World's Championship Competition. The team started strong by winning all of 
 their practice rounds and setting the early high score of 95 points. 
 
 
