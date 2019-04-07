@@ -21,13 +21,14 @@ and teamwork.
 
 
 ## Donations
-We are currently looking for donations so we can attend the First Championship in Detroit.
+We are currently looking for donations so we can attend the [First Championship in Detroit](https://www.firstchampionship.org/detroit) at the end of April.
 
 If you wish to write a check, download this [Check Donation Form](/files/Donation_Form.pdf).
 
 If you would prefer to use a credit card, we have a [GoFundMe setup here](https://www.gofundme.com/send-frc-team-1091-to-championships).
 
 [Washington County Insider article about our Wisconsin Regional win](https://www.washingtoncountyinsider.com/hartford-union-high-school-robotics-team-1091-qualifies-for-championship-by-rena-diem/)
+
 
 
 ## Contact Details

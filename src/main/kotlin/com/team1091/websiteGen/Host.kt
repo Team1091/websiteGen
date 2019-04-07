@@ -24,8 +24,9 @@ import kotlinx.html.title
 import kotlinx.html.ul
 import kotlinx.html.unsafe
 import org.apache.commons.io.FileUtils
-import spark.kotlin.Http
-import spark.kotlin.ignite
+import spark.Spark.get
+import spark.Spark.port
+import spark.Spark.staticFiles
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
@@ -34,23 +35,22 @@ import java.time.LocalDate
 // This is the main function, its the starting point to the whole application
 fun main(args: Array<String>) {
 
-    val port = 9000
+    val portNo = 9000
 
     // This converts our markdown into webpages
     Builder.build()
 
     // This creates a small webserver using http://sparkjava.com/
-    val http: Http = ignite()
-    http.port(port)
-    http.staticFiles.externalLocation("www")
+    port(portNo)
+    staticFiles.externalLocation("www")
 
     // we can hit a endpoint called rebuild to remake the site
-    http.get("/rebuild") {
+    get("/rebuild") { req, resp ->
         Builder.build()
         "OK"
     }
 
-    println("Go to http://localhost:$port/ in your browser")
+    println("Go to http://localhost:$portNo/ in your browser")
 
 }
 
@@ -112,12 +112,13 @@ object Builder {
                     .map { it.trim() }
                     .first { it.startsWith("title:") }
                     .split(":")[1].trim()
+            val pageName = file.name.split('.')[0]
 
             Page(
                     content = file.readText().split("---")[2],
                     title = title,
-                    url = "/" + file.name.split('.')[0] + ".html",
-                    outputDir = file.name.split('.')[0] + ".html"
+                    url = "/${pageName}.html",
+                    outputDir = "${pageName}.html"
             )
         }
 
@@ -179,6 +180,7 @@ object Builder {
     }
 
 
+    val bootstrapVersion = "4.3.1"
     fun generatePage(content: (DIV) -> Unit,
                      title: String,
                      topMenuItems: List<Pair<String, String>>,
@@ -190,8 +192,8 @@ object Builder {
                 title("$title | Team 1091 | Oriole Assault")
                 meta(content = "text/html", charset = "urt-8")
                 meta(name = "viewport", content = "width=device-width, initial-scale=1")
-                link(rel = "stylesheet", href = "http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css")
-                script(src = "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js") {}
+                link(rel = "stylesheet", href = "http://maxcdn.bootstrapcdn.com/bootstrap/${bootstrapVersion}/css/bootstrap.min.css")
+                script(src = "https://maxcdn.bootstrapcdn.com/bootstrap/${bootstrapVersion}/js/bootstrap.min.js") {}
                 link(rel = "stylesheet", href = "/css/main.css")
             }
             body {
@@ -267,28 +269,6 @@ object Builder {
         val inner: (DIV) -> Unit = { it.div { unsafe { raw(html) } } }
         inner
     }
-
-
-//    fun generateCss(): String {
-//
-//
-//        val orange = 0xdd8500
-//        val white = 0xffffff
-//        val black = 0x0
-//
-//        // https://github.com/olegcherr/Aza-Kotlin-CSS
-//        return Stylesheet {
-//
-//            footer {
-//                position = "absolute";
-//                bottom = 0;
-//                width = 100.percent;
-//                height = 60.px;
-//                lineHeight = 60.px;
-//                backgroundColor = "#f5f5f5";
-//            }
-//        }.render()
-//    }
 
 }
 
