@@ -27,19 +27,11 @@ body {
 header {
   color: white;
   text-shadow: 1px 1px black;
+  padding: 60px 15px 0;
 }
 
 aside {
   background: whitesmoke;
-}
-
-body > .container {
-  padding: 60px 15px 0;
-}
-
-.footer > .container {
-  padding-right: 15px;
-  padding-left: 15px;
 }
 
 img {
