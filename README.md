@@ -47,3 +47,8 @@ a minimal attack surface.
 Q: There are probably like 100 static generation frameworks, why write your own?  https://www.staticgen.com/
 
 A: They are not hard to write, why do you think there are so many?  Besides, I kinda wanted to write one.
+
+
+
+
+## SNEEZE
