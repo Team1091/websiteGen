@@ -38,6 +38,6 @@ If you have done some programming experience, Google has a pretty good introduct
  us to program commands that can be chained together to do more complex actions. 
 * [Finite State Machines](https://gamedevelopment.tutsplus.com/tutorials/finite-state-machines-theory-and-implementation--gamedev-11867) - When a mechanism
 becomes more complex with multiple states and transitions between them, we can represent it in code with an FSM.
-* PID Loop - Used to get to and hold a position, speed, or angle.
+* [PID Loop](https://frc-pdr.readthedocs.io/en/latest/control/pid_control.html) - Used to get to and hold a position, speed, or angle.
 * [Pathfinding](https://www.redblobgames.com/pathfinding/a-star/introduction.html) - Can be used to plan a path between two points.
-* Planning - Allows us to use a list of actions to modify a complex world state to reach a goal.
+* [Planning](https://github.com/stewsters/kaiju/blob/master/src/main/kotlin/kaiju/plan/Planner.kt) - Allows us to use a list of actions to modify a complex world state to reach a goal.
