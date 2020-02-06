@@ -14,9 +14,9 @@ object Uploader {
     private val pwd: String = System.getenv("PASS")
 
     @JvmStatic
-    fun main(args: Array<String>) {
+    fun main() {
 
-        Builder.build()
+        build()
 
         val ftp = FTPClient()
 
