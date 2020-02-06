@@ -34,9 +34,7 @@ If you want a top level page, you can put a markdown file under src/main/resourc
 ```
 
 # Styling
-We use [Bootstrap 4](https://getbootstrap.com/) for a base style of this website.  It's a 
-
-
+We use [Bootstrap 4](https://getbootstrap.com/) for a base style of this website.
 
 
 ## History
@@ -47,8 +45,3 @@ a minimal attack surface.
 Q: There are probably like 100 static generation frameworks, why write your own?  https://www.staticgen.com/
 
 A: They are not hard to write, why do you think there are so many?  Besides, I kinda wanted to write one.
-
-
-
-
-## SNEEZE
