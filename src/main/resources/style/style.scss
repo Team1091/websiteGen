@@ -8,6 +8,13 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  //background-color: #333333;
+  //color: #DDDDDD;
+}
+
+body, aside{
+  background: #333333;
+  color: #DDDDDD;
 }
 
 .footer {
@@ -24,14 +31,13 @@ body {
 -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
 
-header {
-  color: white;
-  text-shadow: 1px 1px black;
-  padding: 60px 15px 0;
-}
+//header {
+//  color: white;
+//  padding: 60px 15px 0;
+//}
 
 aside {
-  background: whitesmoke;
+  box-shadow: 0px 0px 4px coral;
 }
 
 img {
@@ -45,6 +51,13 @@ code {
 .jumbotron {
   background-image: url("/images/header-machine-shop.jpg");
   background-size: cover;
+  color: white;
+  text-shadow: 0px 0px 4px black;
+
+}
+
+.jumbotron .container {
+  text-align: center;
 }
 
 .calendar {

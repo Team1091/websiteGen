@@ -1,5 +1,6 @@
 ---
 title: Join the Team
+order: 6
 ---
 
 # Joining the Team

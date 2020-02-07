@@ -1,5 +1,6 @@
 ---
 title: Sponsors
+order: 5
 ---
 
 # 2019 Sponsors

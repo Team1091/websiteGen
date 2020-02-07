@@ -108,19 +108,24 @@ fun build() {
         }
     }
 
+//    val blogPage = Page()
+
     val pages = File("src/main/resources/pages").listFiles().map { file ->
-        val header = file.readText().split("---")[1]
-        val title = header.lines().asSequence()
-                .map { it.trim() }
-                .first { it.startsWith("title:") }
+        val header = file.readText().split("---")[1].lines().map { it.trim() }
+        val order = (header.firstOrNull { it.startsWith("order:") } ?: ":99")
                 .split(":")[1].trim()
+
+        val title = (header.firstOrNull { it.startsWith("title:") } ?: ":Untitled")
+                .split(":")[1].trim()
+
         val pageName = file.name.split('.')[0]
 
         Page(
                 content = file.readText().split("---")[2],
                 title = title,
-                url = "/$pageName.html",
-                outputDir = "$pageName.html"
+                url = if (pageName == "index") "/" else "$pageName.html",
+                outputDir = "$pageName.html",
+                order = Integer.parseInt(order)
         )
     }
 
@@ -128,12 +133,12 @@ fun build() {
     posts.asSequence()
             .sortedByDescending { it.date.year }
             .groupBy { it.date.year }
-            .forEach { (key: Int, value: List<Post>) ->
-                sidebarItems[key.toString()] = value.sortedByDescending { it.date }.map { Pair(it.title, it.url) }
+            .forEach { (year: Int, posts: List<Post>) ->
+                sidebarItems[year.toString()] = posts.sortedByDescending { it.date }.map { Pair(it.title, it.url) }
             }
 
     val topMenuItems: List<Pair<String, String>> = pages.asSequence()
-            .sortedBy { it.title }
+            .sortedBy { it.order }
             .map { Pair(it.title, it.url) }
             .toList()
 
@@ -195,7 +200,7 @@ private fun generatePage(
         lang = "en"
         head {
             title("$title | Team 1091 | Oriole Assault")
-            meta(content = "text/html", charset = "urt-8")
+            meta(content = "text/html", charset = "utf-8")
             meta(name = "viewport", content = "width=device-width, initial-scale=1")
             link(rel = "stylesheet", href = "http://maxcdn.bootstrapcdn.com/bootstrap/$bootstrapVersion/css/bootstrap.min.css")
             script(src = "https://maxcdn.bootstrapcdn.com/bootstrap/$bootstrapVersion/js/bootstrap.min.js") {}
@@ -203,13 +208,21 @@ private fun generatePage(
         }
         body {
 
+            div("jumbotron jumbotron-fluid") {
+                div("container") {
+                    h1("display-4") { +"Team 1091" }
+                    p("lead") { +"Hartford Union Highschool First Robotics Team" }
+                }
+
+            }
+
             header {
                 nav("navbar navbar-expand-md navbar-dark fixed-top bg-dark") {
-                    a(href = "/", classes = "navbar-brand") { +"Home" }
+                    //                    a(href = "/", classes = "navbar-brand") { +"Home" }
                     div("collapse navbar-collapse") {
-                        ul("navbar-nav mr-auto") {
+                        ul("navbar-nav nav-fill w-100") {
 
-                            topMenuItems.filter { it.first != "Home" }.forEach {
+                            topMenuItems.forEach {
                                 li(classes = "nav-item") {
                                     a(classes = "nav-link", href = it.second) { +it.first }
                                 }
@@ -220,13 +233,7 @@ private fun generatePage(
             }
 
             div("container") {
-                div("row jumbotron") {
-                    header {
-                        h1 { +"Team 1091" }
-                        p { +"Hartford Union Highschool First Robotics Team" }
-                    }
 
-                }
 
                 div("row") {
                     aside("col-sm-3") {
