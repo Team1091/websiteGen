@@ -2,30 +2,9 @@ package com.team1091.websiteGen
 
 import io.javalin.Javalin
 import io.javalin.http.staticfiles.Location
-import kotlinx.html.DIV
-import kotlinx.html.a
-import kotlinx.html.aside
-import kotlinx.html.body
-import kotlinx.html.div
+import kotlinx.html.*
 import kotlinx.html.dom.createHTMLDocument
 import kotlinx.html.dom.serialize
-import kotlinx.html.footer
-import kotlinx.html.h1
-import kotlinx.html.h2
-import kotlinx.html.h3
-import kotlinx.html.head
-import kotlinx.html.header
-import kotlinx.html.html
-import kotlinx.html.lang
-import kotlinx.html.li
-import kotlinx.html.link
-import kotlinx.html.meta
-import kotlinx.html.nav
-import kotlinx.html.p
-import kotlinx.html.script
-import kotlinx.html.title
-import kotlinx.html.ul
-import kotlinx.html.unsafe
 import org.apache.commons.io.FileUtils
 
 import java.io.File
@@ -243,8 +222,10 @@ private fun generatePage(
                             ul {
                                 links.forEach {
                                     li {
-                                        a(it.second) {
-                                            +it.first
+                                        button {
+                                            a(it.second) {
+                                                +it.first
+                                            }
                                         }
                                     }
                                 }

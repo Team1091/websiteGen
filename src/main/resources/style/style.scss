@@ -63,6 +63,22 @@ margin-bottom: 0;
 .calendar {
   border: none;
 }
+aside button {
+    border-color: #363636;
+    background-color: #343a40;
+    width: 100%;
+}
+aside a:hover{
+color:white;
+}
+aside ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+}
+
+a {
+    color: #ff6f00
+}
 
 header{
     margin-bottom: 1em;
