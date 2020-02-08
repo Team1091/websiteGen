@@ -17,5 +17,6 @@ data class Page(
         val url: String,
         val content: String,
         val outputDir: String,
-        val order: Int
+        val order: Int,
+        val sidebarItems: Map<String, List<Pair<String, String>>>? = null
 )

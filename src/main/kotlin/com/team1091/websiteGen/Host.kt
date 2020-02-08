@@ -56,9 +56,6 @@ fun build() {
     val jsFolder = File(outDir, "js")
     jsFolder.mkdir()
 
-    val blogFolder = File(outDir, "blog")
-    blogFolder.mkdir()
-
     val imgFolder = File(outDir, "images")
     imgFolder.mkdir()
 
@@ -81,13 +78,20 @@ fun build() {
                     date = LocalDate.parse(date),
                     content = post.readText().split("---")[2],
                     title = title,
-                    url = "/" + blogFolder.name + "/" + post.name.split('.')[0] + ".html",
+                    url = title.replace(" ", "-"),
                     outputDir = post.name.split('.')[0] + ".html"
             )
         }
     }
 
-//    val blogPage = Page()
+    val sidebarItems: Map<String, List<Pair<String, String>>> = posts.asSequence()
+            .sortedByDescending { it.date.year }
+            .groupBy { it.date.year }
+            .map { (year: Int, posts: List<Post>) ->
+                Pair(year.toString(), posts.sortedByDescending { it.date }.map { Pair(it.title, it.url) })
+            }
+            .toMap()
+
 
     val pages = File("src/main/resources/pages").listFiles().map { file ->
         val header = file.readText().split("---")[1].lines().map { it.trim() }
@@ -106,39 +110,33 @@ fun build() {
                 outputDir = "$pageName.html",
                 order = Integer.parseInt(order)
         )
-    }
+    } + Page(
+            title = "Blog",
+            url = "blog.html",
+            content = posts.sortedByDescending { it.date }.map { it.content }.joinToString("\n\n"),
+            outputDir = "blog.html",
+            order = 3,
+            sidebarItems = sidebarItems
+    )
 
-    val sidebarItems: MutableMap<String, List<Pair<String, String>>> = mutableMapOf()
-    posts.asSequence()
-            .sortedByDescending { it.date.year }
-            .groupBy { it.date.year }
-            .forEach { (year: Int, posts: List<Post>) ->
-                sidebarItems[year.toString()] = posts.sortedByDescending { it.date }.map { Pair(it.title, it.url) }
-            }
 
     val topMenuItems: List<Pair<String, String>> = pages.asSequence()
             .sortedBy { it.order }
             .map { Pair(it.title, it.url) }
             .toList()
 
-    // Generate Blog pages
-    posts.forEach {
-        File(blogFolder, it.outputDir).writeText(
-                generatePage(markdownToHtml(it.content), it.title, topMenuItems, sidebarItems)
-        )
-    }
 
     // Generate Main Pages
     pages.forEach {
         File(outDir, it.outputDir).writeText(
-                generatePage(markdownToHtml(it.content), it.title, topMenuItems, sidebarItems)
+                generatePage(markdownToHtml(it.content), it.title, topMenuItems, it.sidebarItems)
         )
     }
 
 
     // look into https://github.com/scireum/server-sass
     File(cssFolder, "main.css").writeText(
-            File("src/main/resources/style/style.scss").readText()
+            File("src/main/resources/style/style.css").readText()
     )
 
     File("src/main/resources/images").listFiles().forEach {
@@ -171,7 +169,7 @@ private fun generatePage(
         content: (DIV) -> Unit,
         title: String,
         topMenuItems: List<Pair<String, String>>,
-        sidebarItems: Map<String, List<Pair<String, String>>>
+        sidebarItems: Map<String, List<Pair<String, String>>>?
 ): String {
     // https://web.archive.org/web/20180125183833/http://www.team1091.com/
     // https://github.com/Kotlin/kotlinx.html
@@ -215,25 +213,31 @@ private fun generatePage(
 
 
                 div("row") {
-                    aside("col-sm-3") {
-                        h2 { +"Blog Posts" }
-                        sidebarItems.forEach { (year, links) ->
-                            h3 { +year }
-                            ul {
-                                links.forEach {
-                                    li {
-                                        button {
-                                            a(it.second) {
-                                                +it.first
+                    if (sidebarItems != null) {
+                        aside("col-sm-3") {
+                            h2 { +"Blog Posts" }
+                            sidebarItems.forEach { (year, links) ->
+                                h3 { +year }
+                                ul {
+                                    links.forEach {
+                                        li {
+                                            button {
+                                                a(it.second) {
+                                                    +it.first
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    div("col-sm-9") {
-                        content(this)
+                        div("col-sm-9") {
+                            content(this)
+                        }
+                    } else {
+                        div("col-sm-12") {
+                            content(this)
+                        }
                     }
 
                 }

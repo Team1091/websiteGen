@@ -1,5 +1,4 @@
 ---
-layout: post
 date: 2019-03-31
 title: Wisconsin Regional
 ---
