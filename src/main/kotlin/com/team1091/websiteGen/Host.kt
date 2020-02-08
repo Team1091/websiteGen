@@ -217,7 +217,7 @@ private fun generatePage(
             }
 
             header {
-                nav("navbar navbar-expand-md navbar-dark fixed-top bg-dark") {
+                nav("navbar navbar-expand-md navbar-dark bg-dark") {
                     //                    a(href = "/", classes = "navbar-brand") { +"Home" }
                     div("collapse navbar-collapse") {
                         ul("navbar-nav nav-fill w-100") {

@@ -53,7 +53,7 @@ code {
   background-size: cover;
   color: white;
   text-shadow: 0px 0px 4px black;
-
+margin-bottom: 0;
 }
 
 .jumbotron .container {
@@ -62,4 +62,8 @@ code {
 
 .calendar {
   border: none;
+}
+
+header{
+    margin-bottom: 1em;
 }
