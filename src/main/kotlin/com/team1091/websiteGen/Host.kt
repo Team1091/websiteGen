@@ -258,7 +258,7 @@ private fun generatePage(
                 }
 
             }
-            footer("footer") {
+            footer("footer bg-dark") {
                 div("container") {
                     p {
                         +"Team 1091 Oriole Assault"
