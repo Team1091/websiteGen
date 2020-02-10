@@ -7,53 +7,50 @@ import java.io.File
 import java.io.IOException
 
 // Uploads to the website
-object Uploader {
 
     private val host: String = System.getenv("HOST")
     private val user: String = System.getenv("USER")
     private val pwd: String = System.getenv("PASS")
 
-    @JvmStatic
-    fun main() {
+fun main() {
 
-        build()
+    build()
 
-        val ftp = FTPClient()
+    val ftp = FTPClient()
 
-        println("Connecting")
-        ftp.connect(host)
+    println("Connecting")
+    ftp.connect(host)
 
 
-        val reply = ftp.replyCode
-        if (!FTPReply.isPositiveCompletion(reply)) {
-            ftp.disconnect()
-            throw Exception("Exception in connecting to FTP Server")
-        }
-
-        println("Logging in")
-        if (!ftp.login(user, pwd)) {
-            throw Exception("Log in fail")
-        }
-
-        ftp.setFileType(FTP.BINARY_FILE_TYPE)
-        ftp.enterLocalPassiveMode()
-
-        // clear old stuff
-        FTPUtil.removeDirectory(ftp, "/domains/team1091.com/public_html", "")
-
-        // Do upload of www directory
-        ftp.changeWorkingDirectory("/domains/team1091.com/public_html")
-
-        File("www").listFiles().forEach {
-            FTPUtil.upload(it, ftp)
-        }
-
-        // Disconnect
-        println("Logging out")
-        ftp.logout()
-        println("Disconnecting")
+    val reply = ftp.replyCode
+    if (!FTPReply.isPositiveCompletion(reply)) {
         ftp.disconnect()
+        throw Exception("Exception in connecting to FTP Server")
     }
+
+    println("Logging in")
+    if (!ftp.login(user, pwd)) {
+        throw Exception("Log in fail")
+    }
+
+    ftp.setFileType(FTP.BINARY_FILE_TYPE)
+    ftp.enterLocalPassiveMode()
+
+    // clear old stuff
+    FTPUtil.removeDirectory(ftp, "/domains/team1091.com/public_html", "")
+
+    // Do upload of www directory
+    ftp.changeWorkingDirectory("/domains/team1091.com/public_html")
+
+    File("www").listFiles().forEach {
+        FTPUtil.upload(it, ftp)
+    }
+
+    // Disconnect
+    println("Logging out")
+    ftp.logout()
+    println("Disconnecting")
+    ftp.disconnect()
 }
 
 object FTPUtil {

@@ -8,7 +8,8 @@ data class Post(
         val title: String,
         val url: String,
         val content: String,
-        val outputDir: String
+        val outputDir: String,
+        val hidden: Boolean = false
 )
 
 // General Pages
@@ -18,5 +19,6 @@ data class Page(
         val content: String,
         val outputDir: String,
         val order: Int,
-        val sidebarItems: Map<String, List<Pair<String, String>>>? = null
+        val sidebarItems: Map<String, List<Pair<String, String>>>? = null,
+        val hidden: Boolean = false
 )

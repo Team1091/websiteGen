@@ -66,20 +66,23 @@ fun build() {
     val posts = File("src/main/resources/blog/published").listFiles().flatMap { year ->
         year.listFiles().map { post ->
             val header = post.readText().split("---")[1].lines().map { it.trim() }
-            val title = header.asSequence()
+            val title = header
                     .first { it.startsWith("title:") }
                     .split(":")[1].trim()
 
-            val date = header.asSequence()
+            val date = header
                     .first { it.startsWith("date:") }
                     .split(":")[1].trim()
+
+            val hide = header.any { it.startsWith("hide:") }
 
             Post(
                     date = LocalDate.parse(date),
                     content = post.readText().split("---")[2],
                     title = title,
                     url = title.replace(" ", "-"),
-                    outputDir = post.name.split('.')[0] + ".html"
+                    outputDir = post.name.split('.')[0] + ".html",
+                    hidden = hide
             )
         }
     }
@@ -103,12 +106,15 @@ fun build() {
 
         val pageName = file.name.split('.')[0]
 
+        val hide = header.any { it.startsWith("hide:") }
+
         Page(
                 content = file.readText().split("---")[2],
                 title = title,
                 url = if (pageName == "index") "/" else "$pageName.html",
                 outputDir = "$pageName.html",
-                order = Integer.parseInt(order)
+                order = Integer.parseInt(order),
+                hidden = hide
         )
     } + Page(
             title = "Blog",
@@ -116,11 +122,13 @@ fun build() {
             content = posts.sortedByDescending { it.date }.map { it.content }.joinToString("\n\n"),
             outputDir = "blog.html",
             order = 3,
-            sidebarItems = sidebarItems
+            sidebarItems = sidebarItems,
+            hidden = false
     )
 
 
-    val topMenuItems: List<Pair<String, String>> = pages.asSequence()
+    val topMenuItems: List<Pair<String, String>> = pages
+            .filterNot { it.hidden }
             .sortedBy { it.order }
             .map { Pair(it.title, it.url) }
             .toList()
@@ -137,6 +145,10 @@ fun build() {
     // look into https://github.com/scireum/server-sass
     File(cssFolder, "main.css").writeText(
             File("src/main/resources/style/style.css").readText()
+    )
+
+    File(jsFolder, "main.js").writeText(
+            File("src/main/resources/script/script.js").readText()
     )
 
     File("src/main/resources/images").listFiles().forEach {
@@ -180,8 +192,19 @@ private fun generatePage(
             meta(content = "text/html", charset = "utf-8")
             meta(name = "viewport", content = "width=device-width, initial-scale=1")
             link(rel = "stylesheet", href = "http://maxcdn.bootstrapcdn.com/bootstrap/$bootstrapVersion/css/bootstrap.min.css")
-            script(src = "https://maxcdn.bootstrapcdn.com/bootstrap/$bootstrapVersion/js/bootstrap.min.js") {}
             link(rel = "stylesheet", href = "/css/main.css")
+
+            script(src = "https://code.jquery.com/jquery-3.4.1.slim.min.js") {
+                //                integrity = "sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+//                crossorigin="anonymous"
+            }
+            script(src = "https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js") {
+                //                integrity = "sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+//                crossorigin="anonymous"
+            }
+
+            script(src = "https://maxcdn.bootstrapcdn.com/bootstrap/$bootstrapVersion/js/bootstrap.min.js") {}
+            script(src = "/js/main.js") {}
         }
         body {
 
@@ -214,7 +237,7 @@ private fun generatePage(
 
                 div("row") {
                     if (sidebarItems != null) {
-                        aside("col-sm-3") {
+                        aside("col-3") {
                             h2 { +"Blog Posts" }
                             sidebarItems.forEach { (year, links) ->
                                 h3 { +year }
@@ -231,11 +254,11 @@ private fun generatePage(
                                 }
                             }
                         }
-                        div("col-sm-9") {
+                        div("col-9") {
                             content(this)
                         }
                     } else {
-                        div("col-sm-12") {
+                        div("col-12") {
                             content(this)
                         }
                     }
@@ -255,7 +278,7 @@ private fun generatePage(
             .serialize(true)
             .replace( // This is to insert the calendar, for some reason the XML parser did not like the URL
                     "{{calendar}}",
-                    "<iframe class=\"calendar\" width=\"800px\" height=\"600px\" src=\"https://calendar.google.com/calendar/embed?src=frcteam1091%40gmail.com&ctz=America%2FChicago\"/>")
+                    "<iframe class=\"calendar\" width=\"100%\" height=\"600px\" src=\"https://calendar.google.com/calendar/embed?src=frcteam1091%40gmail.com&ctz=America%2FChicago\"/>")
 }
 
 
