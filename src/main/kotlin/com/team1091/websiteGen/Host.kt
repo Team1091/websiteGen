@@ -193,6 +193,7 @@ private fun generatePage(
             meta(name = "viewport", content = "width=device-width, initial-scale=1")
             link(rel = "stylesheet", href = "http://maxcdn.bootstrapcdn.com/bootstrap/$bootstrapVersion/css/bootstrap.min.css")
             link(rel = "stylesheet", href = "/css/main.css")
+            link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css")
 
             script(src = "https://code.jquery.com/jquery-3.4.1.slim.min.js") {
                 //                integrity = "sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -268,8 +269,16 @@ private fun generatePage(
             }
             footer("footer bg-dark") {
                 div("container") {
-                    p {
-                        +"Team 1091 Oriole Assault"
+                    div(classes = "row") {
+                        p(classes = "col-10") {
+                            +"Team 1091 Oriole Assault"
+                        }
+
+                        div(classes = "col-2") {
+                            a(href = "https://facebook.com/frcteam1091", classes = "fab fa-facebook-f") {}
+                            a(href = "https://twitter.com/HUHS_Robotics", classes = "fab fa-twitter-square") {}
+                            a(href = "https://instagram.com/frcteam1091", classes = "fab fa-instagram") {}
+                        }
                     }
                 }
             }

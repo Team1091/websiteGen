@@ -3,3 +3,4 @@ www/
 .gradle/
 .idea/
 *.iml
+out/
